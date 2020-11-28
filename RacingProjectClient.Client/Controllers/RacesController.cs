@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RacingProjectClient.Client.Controllers
 {
-    public class DriversController : Controller
+    public class RacesController : Controller
     {
         private RacingApi _racingApi = new RacingApi();
 
@@ -18,13 +18,13 @@ namespace RacingProjectClient.Client.Controllers
         public async Task<IActionResult> Index()
         {
             HttpClient client = _racingApi.Initial();
-            HttpResponseMessage response = await client.GetAsync("/drivers");
+            HttpResponseMessage response = await client.GetAsync("/races");
 
             if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
-                var drivers = JsonConvert.DeserializeObject<List<Driver>>(result);
-                return View(drivers);
+                var races = JsonConvert.DeserializeObject<List<Race>>(result);
+                return View(races);
             }
 
             return NotFound();
@@ -34,13 +34,13 @@ namespace RacingProjectClient.Client.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             HttpClient client = _racingApi.Initial();
-            HttpResponseMessage response = await client.GetAsync($"/drivers/{id}");
+            HttpResponseMessage response = await client.GetAsync($"/races/{id}");
 
             if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
-                var driver = JsonConvert.DeserializeObject<Driver>(result);
-                return View(driver);
+                var race = JsonConvert.DeserializeObject<Race>(result);
+                return View(race);
             }
 
             return NotFound();
@@ -50,13 +50,13 @@ namespace RacingProjectClient.Client.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             HttpClient client = _racingApi.Initial();
-            HttpResponseMessage response = await client.GetAsync($"/drivers/{id}");
+            HttpResponseMessage response = await client.GetAsync($"/races/{id}");
 
             if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
-                var driver = JsonConvert.DeserializeObject<Driver>(result);
-                return View(driver);
+                var race = JsonConvert.DeserializeObject<Race>(result);
+                return View(race);
             }
 
             return NotFound();
