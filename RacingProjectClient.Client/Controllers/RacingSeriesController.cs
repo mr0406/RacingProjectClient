@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace RacingProjectClient.Client.Controllers
 {
-    [Route("[controller]")]
     public class RacingSeriesController : Controller
     {
         private RacingApi _racingApi = new RacingApi();
@@ -18,18 +17,49 @@ namespace RacingProjectClient.Client.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            List<RacingSerie> racingSeries = new List<RacingSerie>();
-
             HttpClient client = _racingApi.Initial();
             HttpResponseMessage response = await client.GetAsync("/racingseries");
 
             if(response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
-                racingSeries = JsonConvert.DeserializeObject<List<RacingSerie>>(result);
+                var racingSeries = JsonConvert.DeserializeObject<List<RacingSerie>>(result);
+                return View(racingSeries);
             }
 
-            return View(racingSeries);
+            return NotFound();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            HttpClient client = _racingApi.Initial();
+            HttpResponseMessage response = await client.GetAsync($"/racingseries/{id}");
+
+            if(response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                var racingSerie = JsonConvert.DeserializeObject<RacingSerie>(result);
+                return View(racingSerie);
+            }
+
+            return NotFound();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            HttpClient client = _racingApi.Initial();
+            HttpResponseMessage response = await client.GetAsync($"/racingseries/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                var racingSerie = JsonConvert.DeserializeObject<RacingSerie>(result);
+                return View(racingSerie);
+            }
+
+            return NotFound();
         }
     }
 }
