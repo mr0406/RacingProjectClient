@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace RacingProjectClient.Client.Controllers
@@ -15,10 +16,12 @@ namespace RacingProjectClient.Client.Controllers
         private RacingApi _racingApi = new RacingApi();
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
+            int pageNum = page ?? 1;
+
             HttpClient client = _racingApi.Initial();
-            HttpResponseMessage response = await client.GetAsync("/raceresults");
+            HttpResponseMessage response = await client.GetAsync($"/raceresults?page={pageNum}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -28,6 +31,23 @@ namespace RacingProjectClient.Client.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(RaceResult raceResult)
+        {
+            HttpClient client = _racingApi.Initial();
+            string json = JsonConvert.SerializeObject(raceResult);
+            HttpContent httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync("/raceresults", httpContent);
+
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -46,6 +66,17 @@ namespace RacingProjectClient.Client.Controllers
             return NotFound();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, RaceResult newRaceResult)
+        {
+            HttpClient client = _racingApi.Initial();
+            string json = JsonConvert.SerializeObject(newRaceResult);
+            HttpContent httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PutAsync($"/raceresults/{id}", httpContent);
+
+            return RedirectToAction("Index");
+        }
+
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -60,6 +91,16 @@ namespace RacingProjectClient.Client.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpPost]
+        [ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            HttpClient client = _racingApi.Initial();
+            HttpResponseMessage response = await client.DeleteAsync($"/raceresults/{id}");
+
+            return RedirectToAction("Index");
         }
     }
 }
