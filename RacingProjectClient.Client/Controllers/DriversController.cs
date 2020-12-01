@@ -27,7 +27,11 @@ namespace RacingProjectClient.Client.Controllers
             if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
-                var drivers = JsonConvert.DeserializeObject<List<Driver>>(result);
+                var data = JsonConvert.DeserializeObject <IndexPackage<Driver>>(result);
+                var drivers = data.Entities;
+                ViewData["Actual_page"] = data.ActualPage;
+                ViewData["Is_prev_disabled"] = !data.HasPreviousPage;
+                ViewData["Is_next_disabled"] = !data.HasNextPage;
                 return View(drivers);
             }
 
