@@ -4,6 +4,18 @@
     ViewData["Title"] = "Index";
 }
 
+@{
+    var actualPage = (int)ViewData["Actual_page"];
+    var prevDisabled = (bool)ViewData["Is_prev_disabled"] ? "disabled" : "";
+    var nextDisabled = (bool)ViewData["Is_next_disabled"] ? "disabled" : "";
+
+    Dictionary<string, string> prevDict = new Dictionary<string, string>();
+    prevDict.Add("page", (actualPage - 1).ToString());
+
+    Dictionary<string, string> nextDict = new Dictionary<string, string>();
+    nextDict.Add("page", (actualPage + 1).ToString());
+}
+
 <h1>Index</h1>
 
 <p>
@@ -31,29 +43,41 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RacingSeriesId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Country)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfLaps)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RacingSeriesId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Country)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumberOfLaps)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<a asp-action="Index"
+   asp-all-route-data="prevDict"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-all-route-data="nextDict"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

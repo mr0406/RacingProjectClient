@@ -23,10 +23,14 @@ namespace RacingProjectClient.Client.Controllers
             HttpClient client = _racingApi.Initial();
             HttpResponseMessage response = await client.GetAsync($"/racingseries?page={pageNum}");
 
-            if(response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
-                var racingSeries = JsonConvert.DeserializeObject<List<RacingSerie>>(result);
+                var data = JsonConvert.DeserializeObject<IndexPackage<RacingSerie>>(result);
+                var racingSeries = data.Entities;
+                ViewData["Actual_page"] = data.ActualPage;
+                ViewData["Is_prev_disabled"] = !data.HasPreviousPage;
+                ViewData["Is_next_disabled"] = !data.HasNextPage;
                 return View(racingSeries);
             }
 
