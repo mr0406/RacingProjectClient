@@ -21,6 +21,63 @@ namespace RacingProjectClient.Client.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Drivers()
+        {
+            HttpClient client = _racingApi.Initial();
+            HttpResponseMessage response = await client.GetAsync($"/charts/drivers");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                List<ChartElement> chartElements = JsonConvert.DeserializeObject<List<ChartElement>>(result);
+
+                ViewData["Chart_Title"] = "Number of driver's first places in first 10 races";
+
+                return View("~/Views/Charts/Chart.cshtml", chartElements);
+            }
+
+            return NotFound();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RaceResults()
+        {
+            HttpClient client = _racingApi.Initial();
+            HttpResponseMessage response = await client.GetAsync($"/charts/raceresults");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                List<ChartElement> chartElements = JsonConvert.DeserializeObject<List<ChartElement>>(result);
+
+                ViewData["Chart_Title"] = "Points scored in Austrian GP";
+
+                return View("~/Views/Charts/Chart.cshtml", chartElements);
+            }
+
+            return NotFound();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Races()
+        {
+            HttpClient client = _racingApi.Initial();
+            HttpResponseMessage response = await client.GetAsync($"/charts/races");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                List<ChartElement> chartElements = JsonConvert.DeserializeObject<List<ChartElement>>(result);
+
+                ViewData["Chart_Title"] = "Number of laps in races";
+
+                return View("~/Views/Charts/Chart.cshtml", chartElements);
+            }
+
+            return NotFound();
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Teams()
         {
             HttpClient client = _racingApi.Initial();
