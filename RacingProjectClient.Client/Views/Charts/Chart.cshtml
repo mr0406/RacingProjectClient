@@ -1,0 +1,47 @@
+﻿@model IEnumerable<RacingProjectClient.Client.ApiModels.ChartElement>
+
+@{ 
+    string charTitle = ViewData["Chart_Title"].ToString();
+}
+
+<h3>@ViewData["Chart_Title"]</h3>
+
+<canvas id="myChart"></canvas>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    var chartTitle = @Html.Raw(Json.Serialize(ViewData["Chart_Title"]));
+    var names = @Html.Raw(Json.Serialize(Model.Select(x => x.Name)));
+    var amount = @Html.Raw(Json.Serialize(Model.Select(x => x.Amount)));
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+
+        type: 'bar',
+
+        data: {
+            labels: names,
+            datasets: [{
+                label: chartTitle,
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: amount
+            }]
+        },
+
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+</script>
+
